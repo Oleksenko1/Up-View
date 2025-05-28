@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity() {
 
         val radioGroup = findViewById<RadioGroup>(R.id.radioGroupCurrency)
         val searchEditText = findViewById<EditText>(R.id.searchEditText)
-        val cardPopular = findViewById<CardView>(R.id.cardPopular)
+        val cardPopular = findViewById<CardView>(R.id.cardPopular1)
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
 
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
