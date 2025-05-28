@@ -10,7 +10,10 @@
         android:id="@+id/searchEditText"
         android:layout_width="match_parent"
         android:layout_height="48pt"
-        android:hint="Search crypto..." />
+        android:hint="Search crypto..."
+        android:inputType="text"
+        android:singleLine="true"
+        android:imeOptions="actionDone" />
 
     <RadioGroup
         android:id="@+id/radioGroupCurrency"
