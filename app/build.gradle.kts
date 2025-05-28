@@ -7,6 +7,10 @@ android {
     namespace = "com.example.upview"
     compileSdk = 35
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.example.upview"
         minSdk = 24
