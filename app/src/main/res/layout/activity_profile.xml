@@ -1,49 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/primary"
+    android:foreground="#00FFFEFE">
 
     <ScrollView
+        android:id="@+id/scrollView3"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
             <ImageView
-                android:src="@drawable/ic_avatar_placeholder"
-                android:layout_width="100dp"
-                android:layout_height="100dp"/>
+                android:layout_width="200dp"
+                android:layout_height="240dp"
+                android:src="@drawable/ic_avatar_placeholder" />
 
             <TextView
                 android:id="@+id/nicknameTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nickname" />
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="Nickname"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/emailTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Email" />
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="Email"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
 
             <TextView
                 android:id="@+id/creationDateTextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Joined Date" />
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="Joined Date"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="Favorites:" />
+                android:fontFamily="sans-serif-smallcaps"
+                android:text="Favorites:"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </ScrollView>
 
@@ -51,5 +74,11 @@
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_nav_menu"/>
-</LinearLayout>
+        android:background="#FFFFFFFF"
+        app:itemIconSize="38dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+</androidx.constraintlayout.widget.ConstraintLayout>
