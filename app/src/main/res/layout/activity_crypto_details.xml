@@ -1,85 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/primary"
+    android:foreground="#00FFFEFE">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <LinearLayout
-            android:orientation="vertical"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <RadioGroup
-                android:id="@+id/radioGroupPeriod"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <RadioButton
-                    android:id="@+id/radioDay"
+                <RadioGroup
+                    android:id="@+id/radioGroupPeriod"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radioDay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#F0F0F0"
+                        android:text="1D"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/radioWeek"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#F0F0F0"
+                        android:text="1W"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/radioMonth"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#F0F0F0"
+                        android:text="1M"
+                        android:textColor="@color/white" />
+
+                    <RadioButton
+                        android:id="@+id/radioYear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:buttonTint="#F0F0F0"
+                        android:checked="false"
+                        android:text="1Y"
+                        android:textColor="@color/white" />
+                </RadioGroup>
+
+                <ImageView
+                    android:id="@+id/imageView"
                     android:layout_width="wrap_content"
+                    android:layout_height="336dp"
+                    app:srcCompat="@drawable/ic_chart_mockup" />
+
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1D" />
+                    android:layout_marginTop="16dp"
+                    android:text="[Chart Placeholder]"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
-                <RadioButton
-                    android:id="@+id/radioWeek"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1W" />
+                    android:text="Market Cap: $500B"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
-                <RadioButton
-                    android:id="@+id/radioMonth"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1M" />
+                    android:text="Created: 2009"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
-                <RadioButton
-                    android:id="@+id/radioYear"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="1Y" />
-            </RadioGroup>
+                    android:text="Description: Popular digital currency..."
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="[Chart Placeholder]" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Market Cap: $500B" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Created: 2009" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Description: Popular digital currency..." />
-
-            <CheckBox
-                android:id="@+id/favoriteCheckBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Add to favorites" />
-        </LinearLayout>
-    </ScrollView>
+                <CheckBox
+                    android:id="@+id/favoriteCheckBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Add to favorites"
+                    android:textColor="@color/white"
+                    android:textSize="20sp" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/bottom_nav_menu"/>
-</LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+</androidx.constraintlayout.widget.ConstraintLayout>
