@@ -1,80 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="@color/primary"
+    android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/searchEditText"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="48pt"
-        android:hint="Search crypto..."
-        android:inputType="text"
-        android:singleLine="true"
-        android:imeOptions="actionDone" />
-
-    <RadioGroup
-        android:id="@+id/radioGroupCurrency"
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <RadioButton
-            android:id="@+id/radioUsd"
-            android:layout_width="30pt"
-            android:layout_height="48pt"
-            android:checked="true"
-            android:text="USD" />
-
-        <RadioButton
-            android:id="@+id/radioEur"
-            android:layout_width="30pt"
-            android:layout_height="48pt"
-            android:text="EUR" />
-    </RadioGroup>
-
-    <TextView
-        android:layout_width="383dp"
-        android:layout_height="20pt"
-        android:text="Popular"
-        android:textSize="20sp" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardPopular"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
 
         <LinearLayout
+            android:id="@+id/mainContentContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:padding="16dp">
+
+            <EditText
+                android:id="@+id/searchEditText"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="Search crypto..."
+                android:imeOptions="actionDone"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white" />
+
+            <RadioGroup
+                android:id="@+id/radioGroupCurrency"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/radioUsd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:checked="true"
+                    android:text="USD"
+                    android:textColor="@color/white" />
+
+                <RadioButton
+                    android:id="@+id/radioEur"
+                    android:layout_width="wrap_content"
+                    android:layout_height="48dp"
+                    android:text="EUR"
+                    android:textColor="@color/white" />
+            </RadioGroup>
 
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Bitcoin"
-                android:textStyle="bold" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Popular"
+                android:textSize="20sp"
+                android:textColor="@color/white" />
 
-            <TextView
+            <LinearLayout
+                android:id="@+id/cryptoListContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="Price: $27,000" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:text="+5.2% last week" />
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
         </LinearLayout>
-    </androidx.cardview.widget.CardView>
+    </ScrollView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
+        app:itemIconSize="38dp"
         app:menu="@menu/bottom_nav_menu" />
 </LinearLayout>
