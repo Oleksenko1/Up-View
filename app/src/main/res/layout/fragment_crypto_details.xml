@@ -69,12 +69,11 @@
                         android:textColor="@color/white" />
                 </RadioGroup>
 
-                <ImageView
-                    android:id="@+id/imageView"
+                <com.github.mikephil.charting.charts.LineChart
+                    android:id="@+id/lineChart"
                     android:layout_width="match_parent"
-                    android:layout_height="336dp"
-                    android:contentDescription="Chart Image"
-                    app:srcCompat="@drawable/ic_chart_mockup" />
+                    android:layout_height="336dp" />
+
 
                 <TextView
                     android:id="@+id/textViewName"

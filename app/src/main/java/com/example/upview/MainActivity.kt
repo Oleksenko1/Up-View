@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -12,21 +13,26 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.core.os.bundleOf
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
-import android.widget.FrameLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
 
 class MainActivity : AppCompatActivity() {
 
-    private val cryptoList = listOf(
-        CryptoCurrency("Bitcoin", "$27,000", "The first and most well-known cryptocurrency.", 2009),
-        CryptoCurrency("Ethereum", "$1,800", "Platform for decentralized apps and smart contracts.", 2015),
-        CryptoCurrency("Litecoin", "$95", "A peer-to-peer cryptocurrency for instant payments.", 2011)
-    )
+    private val popularCryptoIds = listOf("bitcoin", "ethereum", "litecoin")
 
-    // Храним, открыт ли фрагмент под каждой карточкой
     private val fragmentStateMap = mutableMapOf<Int, Boolean>()
+
+    private lateinit var cryptoListContainer: LinearLayout
+
+    private var currentCurrency = "usd"
+
+    private val apiService by lazy { createApiService() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,17 +40,56 @@ class MainActivity : AppCompatActivity() {
 
         val radioGroup = findViewById<RadioGroup>(R.id.radioGroupCurrency)
         val searchEditText = findViewById<EditText>(R.id.searchEditText)
-        val cryptoListContainer = findViewById<LinearLayout>(R.id.cryptoListContainer)
+        cryptoListContainer = findViewById(R.id.cryptoListContainer)
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
 
         radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            val currency = if (checkedId == R.id.radioUsd) "USD" else "EUR"
-            Toast.makeText(this, "Selected currency: $currency", Toast.LENGTH_SHORT).show()
+            currentCurrency = if (checkedId == R.id.radioUsd) "usd" else "eur"
+            Toast.makeText(this, "Selected currency: ${currentCurrency.uppercase()}", Toast.LENGTH_SHORT).show()
+            fetchCryptoData()
         }
 
-        val inflater = LayoutInflater.from(this)
+        bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.nav_home -> true
+                R.id.nav_profile -> {
+                    startActivity(Intent(this, ProfileActivity::class.java))
+                    true
+                }
+                else -> false
+            }
+        }
 
-        cryptoList.forEachIndexed { index, crypto ->
+        fetchCryptoData()
+    }
+
+    private fun fetchCryptoData() {
+        apiService.getCoinsMarkets(
+            vsCurrency = currentCurrency,
+            ids = popularCryptoIds.joinToString(",")
+        ).enqueue(object : Callback<List<CoinMarket>> {
+            override fun onResponse(call: Call<List<CoinMarket>>, response: Response<List<CoinMarket>>) {
+                if (response.isSuccessful) {
+                    val coins = response.body()
+                    if (coins != null) displayCoins(coins)
+                    else Toast.makeText(this@MainActivity, "Ошибка получения данных", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@MainActivity, "Ошибка сервера: ${response.code()}", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<List<CoinMarket>>, t: Throwable) {
+                Toast.makeText(this@MainActivity, "Ошибка сети: ${t.localizedMessage}", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun displayCoins(coins: List<CoinMarket>) {
+        val inflater = LayoutInflater.from(this)
+        cryptoListContainer.removeAllViews()
+        fragmentStateMap.clear()
+
+        coins.forEach { coin ->
             val itemView = inflater.inflate(R.layout.item_crypto_card, cryptoListContainer, false)
             val cardView = itemView.findViewById<CardView>(R.id.cardView)
             val nameText = itemView.findViewById<TextView>(R.id.cryptoName)
@@ -52,9 +97,9 @@ class MainActivity : AppCompatActivity() {
             val descText = itemView.findViewById<TextView>(R.id.description)
             val fragmentContainer = itemView.findViewById<FrameLayout>(R.id.fragmentContainer)
 
-            nameText.text = crypto.name
-            priceText.text = "Price: ${crypto.currentValue}"
-            descText.text = crypto.description
+            nameText.text = coin.name
+            priceText.text = "Price: $${coin.current_price}"
+            descText.text = "Market cap rank: ${coin.market_cap_rank}"
 
             val containerId = View.generateViewId()
             fragmentContainer.id = containerId
@@ -66,7 +111,6 @@ class MainActivity : AppCompatActivity() {
                 val isOpen = fragmentStateMap[containerId] == true
 
                 if (isOpen) {
-                    // Закрыть фрагмент
                     val fragment = fragmentManager.findFragmentByTag(tag)
                     if (fragment != null) {
                         fragmentManager.beginTransaction()
@@ -75,9 +119,14 @@ class MainActivity : AppCompatActivity() {
                     }
                     fragmentStateMap[containerId] = false
                 } else {
-                    // Открыть фрагмент
                     val fragment = CryptoDetailsFragment().apply {
-                        arguments = bundleOf("crypto" to crypto)
+                        arguments = bundleOf(
+                            "id" to coin.id,
+                            "name" to coin.name,
+                            "price" to coin.current_price,
+                            "rank" to coin.market_cap_rank,
+                            "symbol" to coin.symbol
+                        )
                     }
 
                     fragmentManager.beginTransaction()
@@ -91,16 +140,22 @@ class MainActivity : AppCompatActivity() {
 
             cryptoListContainer.addView(itemView)
         }
+    }
 
-        bottomNav.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.nav_home -> true
-                R.id.nav_profile -> {
-                    startActivity(Intent(this, ProfileActivity::class.java))
-                    true
-                }
-                else -> false
-            }
-        }
+    public fun createApiService(): CoinGeckoApi {
+        val logging = HttpLoggingInterceptor()
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+
+        val httpClient = OkHttpClient.Builder()
+            .addInterceptor(logging)
+            .build()
+
+        val retrofit = Retrofit.Builder()
+            .baseUrl("https://api.coingecko.com/api/v3/")
+            .client(httpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        return retrofit.create(CoinGeckoApi::class.java)
     }
 }
