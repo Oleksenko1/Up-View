@@ -25,6 +25,8 @@
         </activity>
         <activity android:name=".CryptoDetailsActivity" />
         <activity android:name=".ProfileActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".RegisterActivity" />
     </application>
 
 </manifest>

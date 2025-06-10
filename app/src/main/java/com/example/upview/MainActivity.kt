@@ -35,32 +35,41 @@ class MainActivity : AppCompatActivity() {
     private val apiService by lazy { createApiService() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+            super.onCreate(savedInstanceState)
 
-        val radioGroup = findViewById<RadioGroup>(R.id.radioGroupCurrency)
-        val searchEditText = findViewById<EditText>(R.id.searchEditText)
-        cryptoListContainer = findViewById(R.id.cryptoListContainer)
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+            val sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+            val userId = sharedPref.getInt("current_user_id", -1)
 
-        radioGroup.setOnCheckedChangeListener { _, checkedId ->
-            currentCurrency = if (checkedId == R.id.radioUsd) "usd" else "eur"
-            Toast.makeText(this, "Selected currency: ${currentCurrency.uppercase()}", Toast.LENGTH_SHORT).show()
-            fetchCryptoData()
-        }
+            if (userId == -1) {
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            } else {
+                setContentView(R.layout.activity_main)
 
-        bottomNav.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.nav_home -> true
-                R.id.nav_profile -> {
-                    startActivity(Intent(this, ProfileActivity::class.java))
-                    true
+                val radioGroup = findViewById<RadioGroup>(R.id.radioGroupCurrency)
+                val searchEditText = findViewById<EditText>(R.id.searchEditText)
+                cryptoListContainer = findViewById(R.id.cryptoListContainer)
+                val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+
+                radioGroup.setOnCheckedChangeListener { _, checkedId ->
+                    currentCurrency = if (checkedId == R.id.radioUsd) "usd" else "eur"
+                    Toast.makeText(this, "Selected currency: ${currentCurrency.uppercase()}", Toast.LENGTH_SHORT).show()
+                    fetchCryptoData()
                 }
-                else -> false
-            }
-        }
 
-        fetchCryptoData()
+                bottomNav.setOnItemSelectedListener {
+                    when (it.itemId) {
+                        R.id.nav_home -> true
+                        R.id.nav_profile -> {
+                            startActivity(Intent(this, ProfileActivity::class.java))
+                            true
+                        }
+                        else -> false
+                    }
+                }
+
+                fetchCryptoData()
+            }
     }
 
     private fun fetchCryptoData() {
